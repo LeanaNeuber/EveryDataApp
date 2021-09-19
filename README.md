@@ -1,2 +1,2 @@
-# EveryData
+# EveryDataApp
 Shiny App
