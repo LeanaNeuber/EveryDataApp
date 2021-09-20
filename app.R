@@ -310,7 +310,6 @@ server <- function(input, output) {
   })
   
   output$table <- DT::renderDataTable({
-    print(str(datatable))
     datatable
   },  rownames = FALSE, options = list(language = fr))
   
@@ -320,7 +319,7 @@ server <- function(input, output) {
       "food.csv"
     },
     content = function(file) {
-      write.csv(data, file, row.names = FALSE)
+      write.csv(datatable, file, row.names = FALSE)
     }
   )
   
