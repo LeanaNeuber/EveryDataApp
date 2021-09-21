@@ -121,7 +121,7 @@ infotab <- fluidPage(
              shiny::HTML("<br><br><center> <h1>Wer wir sind</h1> </center><br>"),
              shiny::HTML(
                "<h5>Wir sind Ella, Lea und Katrin und arbeiten an
-               der UDE in Essen im Arbeitsbereich von Frau Prof. Heine.</h5>"
+               der UDE in Essen im Arbeitsbereich von Frau Heine.</h5>"
              )
            ),
            column(3)),
@@ -168,7 +168,7 @@ kontakttab <- fluidPage(
              6,
              shiny::HTML("<br><br><center> <h5>Das EveryData Team</h5> </center><br>"),
              shiny::HTML(
-               "<h6><center>Das Team rund um <i>EveryData</i> arbeitet für und im Auftrag von <a href='https://www.uni-due.de/biwi/lls/angela_heine.php'>Frau Professor Heine</a>.</center></h6>"
+               "<h6><center>Das Team rund um <i>EveryData</i> arbeitet für und im Auftrag von <a href='https://www.uni-due.de/biwi/lls/angela_heine.php'>Frau Heine</a>.</center></h6>"
              )
            ),
            column(3)),
