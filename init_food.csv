@@ -1,33 +1,39 @@
-﻿Name;Gericht;Kategorie;Kosten;Zeit;Geschmack;Fun
-Ella;Hühnersuppe;selbstgekocht;2.29;15;8;8
-Katrin;Reis mit Rahmsoße (Hähnchen. Spinat. Champis);selbstgekocht;3.23;20;8.5;7
-Katrin;Innereien;selbstgekocht;1.61;8;8;7
-Ella;Spaghetti + selbstgemachtes Pesto;selbstgekocht;2.54;15;7;6
-Katrin;Döner und Pide (halb/halb);bestellt;5.25;0;6;7.0
-Lea;Kartoffelpizza;selbstgekocht;4.04;25;8.5;8
-Lea;Orzonudeln;selbstgekocht;6.10;20;9;8
-Lea;Pommes;bestellt;3.00;0;7.5;5
-Lea;Carbonara + Salat;bestellt;19.00;0;4;7
-Lea;Käsespätzle;Essen gegangen;9.00;0;7;9
-Lea;Kartoffeln mit Quark;selbstgekocht;2.30;5;7.5;6
-Ella;Tomatentarte;selbstgekocht;2.60;25;10;9
-Ella;Gazpacho + Lachsforelle auf Linsensalat;Essen gegangen;24.00;0;7;9
-Ella;Glasnudelsalat mit Tofu und Erdnüssen;Essen gegangen;9.40;0;8;10
-Ella;Frikadellen. Sellerie. Zitrone mit Reis;selbstgekocht;3.09;30;9;10
-Ella;Gemüsecurry mit Reis und Naan;bestellt;10.90;10;8;8
-Katrin;Burger;bestellt;8.25;0;9;9
-Katrin;Hot Pot;Essen gegangen;35.89;170;10;10
-Katrin;Rinder-Chili-Magen;Essen gegangen;8.50;46;10;10
-Katrin;Pizza Frutti di mare und Rindfleisch;Essen gegangen;13.90;150;10;10
-Katrin;Steak;Essen gegangen;28.90;105;9;9.5
-Katrin;Salat;Essen gegangen;11.25;35;8.5;8
-Katrin;Sushi;Essen gegangen;15.50;59;9.5;10
-Lea;Linsen-Auberginen-Topf;selbstgekocht;3.00;20;8;8
-Ella;Sushi;bestellt;15.20;0;9.5;10
-Ella;Reis mit Hähnchen und Zuckerschoten;selbstgekocht;4.00;25;8;7
-Ella;Kartoffelsalat;selbstgekocht;1.50;20;9;5
-Ella;Spaghetti Aglio Olio;selbstgekocht;2.05;10;9.5;7
-Ella;Kartoffelsuppe;selbstgekocht;1.45;17;8.5;9
-Lea;Salat;bestellt;9.90;5;9;9
-Ella;Gazpacho (grün);selbstgekocht;2.87;10;9;9
-Ella;Hühnerfrikassee mit Reis;selbstgekocht;5.36;30;10;7
+﻿Name;Gericht;Kategorie;Kosten;Zeit;Geschmack;Fun;Foto
+Ella;Hühnersuppe;selbstgekocht;2.29;15;8;8;Hühnersuppe.jpg
+Katrin;Reis mit Rahmsoße (Hähnchen. Spinat. Champis);selbstgekocht;3.23;20;8.5;7;Reis_rahm_nachher.jpg
+Katrin;Innereien;selbstgekocht;1.61;8;8;7;Innereiein_nachher.jpeg
+Ella;Spaghetti + selbstgemachtes Pesto;selbstgekocht;2.54;15;7;6;Spaghetti_Pesto_Fertig.jpeg
+Katrin;Döner und Pide (halb/halb);bestellt;5.25;0;6;;DönerPide.jpeg
+Lea;Kartoffelpizza;selbstgekocht;4.04;25;8.5;8;kartoffelpizza.jpeg
+Lea;Orzonudeln;selbstgekocht;6.1;20;9;8;orzo_ende.jpeg
+Lea;Pommes;bestellt;3;0;7.5;5;pommes_rotweiß.JPG
+Lea;Carbonara + Salat;bestellt;19;0;4;7;nudeln_salat.jpeg
+Lea;Käsespätzle;Essen gegangen;9;0;7;9;käsespätzle.jpeg
+Lea;Kartoffeln mit Quark;selbstgekocht;2.3;5;7.5;6;kartoffeln_quark.jpeg
+Ella;Tomatentarte;selbstgekocht;2.6;25;10;9;Tomatentarte.jpg
+Ella;Gazpacho + Lachsforelle auf Linsensalat;Essen gegangen;24;0;7;9;ella.png
+Ella;Glasnudelsalat mit Tofu und Erdnüssen;Essen gegangen;9.4;0;8;10;ella.png
+Ella;Frikadellen. Sellerie. Zitrone mit Reis;selbstgekocht;3.09;30;9;10;Selleriefrikadellen fertig.jpeg
+Ella;Gemüsecurry mit Reis und Naan;bestellt;10.9;10;8;8;ella.png
+Katrin;Burger;bestellt;8.25;0;9;9;Burger.jpeg
+Katrin;Hot Pot;Essen gegangen;35.89;170;10;10;Hotpot2.jpeg
+Katrin;Rinder-Chili-Magen;Essen gegangen;8.5;46;10;10;Magen.jpeg
+Katrin;Pizza Frutti di mare und Rindfleisch;Essen gegangen;13.9;150;10;10;Pizza_frutti.jpeg
+Katrin;Steak;Essen gegangen;28.9;105;9;9.5;Steak.jpeg
+Katrin;Salat;Essen gegangen;11.25;35;8.5;8;Salat_k.jpeg
+Katrin;Sushi;Essen gegangen;15.5;59;9.5;10;Sushi_k.jpeg
+Lea;Linsen-Auberginen-Topf;selbstgekocht;3;20;8;8;linsen_auberginen.jpeg
+Ella;Sushi;bestellt;15.2;0;9.5;10;Sushi_e.jpeg
+Ella;Reis mit Hähnchen und Zuckerschoten;selbstgekocht;1000;25;8;7;Reis_Zuckerschoten_Fertig.jpeg
+Ella;Kartoffelsalat;selbstgekocht;1000;20;9;5;Kartoffelsalat.jpeg
+Ella;Spaghetti Aglio Olio;selbstgekocht;2.05;10;9.5;7;ella.png
+Ella;Kartoffelsuppe;selbstgekocht;1.45;17;8.5;9;Kartoffelsuppe_fertig.jpg
+Lea;Salat;bestellt;9.9;5;9;9;salat_lea.jpeg
+Ella;Gazpacho (grün);selbstgekocht;2.87;10;9;9;Gazpacho.jpg
+Ella;Hühnerfrikassee mit Reis;selbstgekocht;5.36;30;10;7;ella.png
+Ella;Lachs mit Gemüse und Reis;selbstgekocht;1000;1000;10;10;ella.png
+Ella;Gyozas;selbstgekocht;1000;1000;10;10;ella.png
+Ella;Flammkuchen;bestellt;1000;1000;10;10;ella.png
+Ella;Spinatsalat mit Datteln und Mandeln;selbstgekocht;1000;1000;10;10;ella.png
+Ella;Reis-Linsen-Salat mit Joghurt;selbstgekocht;1000;1000;10;10;ella.png
+Lea;Bohnen-Tofu Pfanne;selbstgekocht;1000;20;8;6;bohnentofu.jpeg
