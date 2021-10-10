@@ -421,11 +421,14 @@ infotab <- fluidPage(
       }
       if (roundy < 1) return(NULL)
       x <- lvls[roundy]
+      print('--------------')
+      print(x)
       subset_on_x <- subset(values$datatable, Name==x)
+      rownames(subset_on_x) <- NULL
       max_row = nrow(subset_on_x) -1
       if (y > max_row) y = max_row
-
-      return (subset_on_x[y + 1, "Gericht"])
+      #print(subset_on_x[y + 1, "Gericht"])
+      return (toString(subset_on_x[y + 1, "Gericht"]))
       })
     
     
