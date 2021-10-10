@@ -216,8 +216,10 @@ infotab <- fluidPage(
       # box(title = "Wie steht's um den Spaß?", plotOutput("pie1")),
       box(width = 12, title = "Hypothesen",
           tabsetPanel(
-            tabPanel("Essen gehen ist super teuer", plotOutput("teuer")),
-            tabPanel("Essen kochen dauert super lange",  plotOutput("zeit")),
+            tabPanel("Beim selber kochen spart man Geld.", plotOutput("teuer")),
+            tabPanel("Essen gehen oder bestellen geht schneller.",  plotOutput("zeit")),
+            tabPanel("Selber kochen ist gesünder.",  plotOutput("gesundheit")),
+            tabPanel("Selber kochen schmeckt genauso gut wie Essen bestellen oder gehen",  plotOutput("geschmack")),
             tabPanel("Essen gehen macht Spaß!",  plotOutput("fun"))
           ))
     ),
@@ -455,6 +457,19 @@ infotab <- fluidPage(
         ylab("Durchschnittliche Zeit")
     })
     
+    output$gesundheit <- renderPlot({
+      ggplot(data = values$datatable, aes(x = Kategorie, y = Kalorien, fill= Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
+        geom_bar(stat = "summary", fun = mean) +
+        xlab("Kategorie") +
+        ylab("Durchschnittliche Kalorien")
+    })
+    
+    output$geschmack <- renderPlot({
+      ggplot(data = values$datatable, aes(x = Kategorie, y = Geschmack, fill= Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
+        geom_bar(stat = "summary", fun = mean) +
+        xlab("Kategorie") +
+        ylab("Durchschnittlicher Geschmack")
+    })
     
     output$fun <- renderPlot({
       ggplot(data = values$datatable, aes(x = Kategorie, y = Fun, fill=Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
