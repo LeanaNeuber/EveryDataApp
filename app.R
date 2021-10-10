@@ -3,7 +3,11 @@ addResourcePath(prefix = 'www', directoryPath = './www')
 library(shinydashboard)
 library(DT)
 library(ggplot2)
-library(wesanderson)
+library(dplyr)
+
+#####################
+day = 1
+####################
 
 de <- list(
   sProcessing = "Verarbeitung läuft...",
@@ -250,15 +254,22 @@ infotab <- fluidPage(
       tabItem(
         tabName = "dashboard",
         fluidRow(
+          box(width=12,
+              sliderInput("dayslide", "Wähle einen Tag:",
+                          min = 0, max = day, value = day, step = 1, ticks = TRUE,
+              )),
+        ),
+        fluidRow(
           infoBoxOutput("Essen"),
           infoBoxOutput("Zeit"),
           infoBoxOutput("Ausgaben")
         ),
+        
         fluidRow(
           box(title = "Eine Übersicht  - Klicke um ein Bild zu sehen!", plotOutput("essen_overall", click="hist_click")),
           # box(verbatimTextOutput("x_value"),
           #     verbatimTextOutput("selected_rows")),
-          box(title= "Hier das leckere Essen: ", plotOutput("foodimg"), align="center")
+          box(title= "Hier das leckere Essen: ", textOutput("foodname"), plotOutput("foodimg"), align="center")
         ),
         fluidRow(                                                                         
           box(title = "Histogram", plotOutput("plot1")),
@@ -267,7 +278,7 @@ infotab <- fluidPage(
             radioButtons(
               "category",
               "Wähle eine Spalte:",
-              choices = c("Name", "Kategorie", "Kosten", "Zeit", "Geschmack", "Fun")
+              choices = c("Kategorie", "Kosten", "Zeit", "Geschmack", "Fun")
             ),
             conditionalPanel(
               "input.category == 'Zeit' | input.category == 'Kosten'| input.category == 'Geschmack'| input.category == 'Fun'",
@@ -282,7 +293,7 @@ infotab <- fluidPage(
           )
         ),
         fluidRow(
-          box(title = "Wer isst am meisten?", plotOutput("pie1")),
+          box(title = "Wie steht's um den Spaß?", plotOutput("pie1")),
           box(title = "Hypothesen",
               tabsetPanel(
                 tabPanel("Essen gehen ist super teuer", plotOutput("teuer")),
@@ -305,13 +316,43 @@ infotab <- fluidPage(
     )))
   
   server <- function(input, output) {
-    datatable <- read.csv("init_food.csv", sep = ";")
+    
+    values <- reactiveValues(datatable = read.csv(paste("food_",1,".csv", sep=""), sep = ";"))
+    
+    observeEvent(input$dayslide, {
+      values$datatable <- read.csv(paste("food_",input$dayslide,".csv", sep=""), sep = ";")
+    })
+    
+
+    # observe({
+    #     daynew <- input$dayslide
+    # })
+    #   
+    # datatable <- read.csv(paste("food_",daynew,".csv", sep=""), sep = ";")
+    
+    # dayslide <- reactive({input$dayslide})
+    # datatable <- reactive({
+    #   read.csv(paste("food_",input$dayslide,".csv", sep=""), sep = ";")
+    # })
+    
+    # observe({
+    #   datatable <- read.csv(paste("food_",dayslide,".csv", sep=""), sep = ";")
+    # })
+    # 
+    #datatable <- read.csv(paste("food_",day,".csv", sep=""), sep = ";")
+    
+    
+    # observeEvent(input$dayslide, {
+    #   print(dayo())
+    #   datatable <- read.csv(paste("food_",20,".csv", sep=""), sep = ";")
+    # })
+    
     
     output$Essen <-
       renderInfoBox({
         infoBox(
           "Essen",
-          nrow(datatable),
+          nrow(values$datatable),
           icon = icon("hamburger"),
           color = "purple",
           fill = TRUE
@@ -320,7 +361,7 @@ infotab <- fluidPage(
     output$Zeit <-
       renderInfoBox({
         infoBox("Minuten",
-                sum(datatable$Zeit),
+                sum(values$datatable$Zeit),
                 icon = icon("clock"),
                 fill = TRUE)
       })
@@ -328,14 +369,14 @@ infotab <- fluidPage(
       renderInfoBox({
         infoBox(
           "Euro",
-          sum(datatable$Kosten),
+          sum(values$datatable$Kosten),
           icon = icon("euro-sign"),
           color = "yellow",
           fill = TRUE
         )
       })
     output$table <- DT::renderDataTable({
-      datatable
+      values$datatable
     },  rownames = FALSE, options = list(language = de))
     
     # Downloadable csv of selected dataset
@@ -344,40 +385,41 @@ infotab <- fluidPage(
         "food.csv"
       },
       content = function(file) {
-        write.csv(datatable, file, row.names = FALSE)
+        write.csv(values$datatable, file, row.names = FALSE)
       }
     )
-    
     output$plot1 <-  renderPlot({
       if (input$category == "Zeit" |
           input$category == "Kosten" |
           input$category == "Geschmack" |
           input$category == "Fun")  {
-        ggplot(data = datatable, aes_string(x = input$category)) + geom_histogram(bins =
+        ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
                                                                                     input$bins,
                                                                                   fill = "#098474")+ylab("Anzahl")
       }
       # else if(input$category == "Name"){ggplot(data = datatable, aes(x = Name, fill= Gericht)) + theme(legend.position = "none") + geom_bar(stat = "count")+ylab("Anzahl")}
       else{
-        ggplot(data = datatable, aes_string(x = input$category)) + geom_bar(stat = "count", fill= "#098474")+ylab("Anzahl")
+        ggplot(data = values$datatable, aes_string(x = input$category)) + geom_bar(stat = "count", fill= "#098474")+ylab("Anzahl")
       }
     })
     output$essen_overall <- renderPlot({
-      ggplot(data = datatable, aes(x = Name, fill= Gericht)) + theme(legend.position = "none") + geom_bar(stat = "count")+ylab("Anzahl aller Essen")
+      ggplot(data = values$datatable, aes(x = Name, fill= Gericht)) + theme(legend.position = "none") + geom_bar(stat = "count")+ylab("Anzahl aller Essen")
       
     })
+    
     output$pie1 <- renderPlot({
-      ggplot(datatable, aes(x = factor(1), fill = datatable[, "Name"])) +
-        geom_bar(stat = "count") +
-        # scale_y_continuous(breaks = seq(0,12,3), labels = c("0", "25%", "50%", "75%", "100%")) +
-        coord_polar("y", start = 0) +
+      by_fun <- values$datatable %>% group_by(Fun) %>% summarise(count=n())
+      ggplot(by_fun, aes(x = "", y=count, fill = as.factor(Fun))) +
+        geom_bar(width = 1, stat = "identity") +
+        coord_polar(theta = "y", start = 0)+
         theme_void() +
         theme(legend.position = "right") +
-        guides(fill = guide_legend(title = "Name"))
+        guides(fill = guide_legend(title = "Fun"))
     })
+    
     output$teuer <- renderPlot({
-      ggplot(data = datatable, aes(x = Kategorie, y = Kosten, fill= Kategorie))+ scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
-        geom_bar(stat = "summary", fun = mean) + coord_flip() +
+      ggplot(data = values$datatable, aes(x = Kategorie, y = Kosten, fill= Kategorie))+ scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
+        geom_bar(stat = "summary", fun = mean) +
         xlab("Kategorie") +
         ylab("Durchschnittliche Kosten")
     })
@@ -399,18 +441,40 @@ infotab <- fluidPage(
     #   # lvls <- levels(datatable$Name)
     #   # round(input$hist_click$x)
     # })
-    output$foodimg <- renderImage({
+    
+    output$foodname <- renderText({ 
+      if (is.null(input$hist_click$x)) return(NULL)
+      if (is.null(input$hist_click$y)) return(NULL)
       
+      y <- round(input$hist_click$y-0.5)
+      lvls <- levels(factor(values$datatable$Name))
+      roundy <- round(input$hist_click$x)
+      if (roundy > 3) {
+        return(NULL)
+      }
+      if (roundy < 1) return(NULL)
+      x <- lvls[roundy]
+      subset_on_x <- subset(values$datatable, Name==x)
+      max_row = nrow(subset_on_x) -1
+      if (y > max_row) y = max_row
+
+      return (subset_on_x[y + 1, "Gericht"])
+      })
+    
+    
+    output$foodimg <- renderImage({
       if (is.null(input$hist_click$x)) return(list(src = "", width = "auto",
                                                    height = "100%", align = "center"))
       if (is.null(input$hist_click$y)) return(list(src = "", width = "auto",
                                                    height = "100%", align = "center"))
-      y <- round(input$hist_click$y)
-      lvls <- levels(factor(datatable$Name))
-      x <- lvls[round(input$hist_click$x)]
-      subset_on_x <- subset(datatable, Name==x)
+      y <- round(input$hist_click$y-0.5)
+      lvls <- levels(factor(values$datatable$Name))
+      roundy <-round(input$hist_click$x)
+      if (roundy > 3 || roundy < 1) return(list(src = "", width = "auto", height = "100%", align = "center"))
+      x <- lvls[roundy]
+      subset_on_x <- subset(values$datatable, Name==x)
       max_row = nrow(subset_on_x) -1
-      if (y > max_row) y = max_row 
+      if (y > max_row) y <- max_row 
       food_name <- subset_on_x[y + 1, "Foto"]
     
       filename <- normalizePath(file.path('./www', food_name))
@@ -420,16 +484,16 @@ infotab <- fluidPage(
     
     
     output$zeit <- renderPlot({
-      ggplot(data = datatable, aes(x = Kategorie, y = Zeit, fill= Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
-        geom_bar(stat = "summary", fun = mean) + coord_flip() +
+      ggplot(data = values$datatable, aes(x = Kategorie, y = Zeit, fill= Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
+        geom_bar(stat = "summary", fun = mean) +
         xlab("Kategorie") +
         ylab("Durchschnittliche Zeit")
     })
     
     
     output$fun <- renderPlot({
-      ggplot(data = datatable, aes(x = Kategorie, y = Fun, fill=Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
-        geom_bar(stat = "summary", fun = mean)  + coord_flip() +
+      ggplot(data = values$datatable, aes(x = Kategorie, y = Fun, fill=Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
+        geom_bar(stat = "summary", fun = mean)  + 
         xlab("Kategorie") +
         ylab("Durchschnittliches Fun-Rating") 
     })
