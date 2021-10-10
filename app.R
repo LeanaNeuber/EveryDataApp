@@ -1,4 +1,4 @@
-addResourcePath(prefix = 'www', directoryPath = './www')
+#addResourcePath(prefix = 'www', directoryPath = './www')
 
 library(shinydashboard)
 library(DT)
@@ -447,8 +447,8 @@ infotab <- fluidPage(
       if (y > max_row) y <- max_row 
       food_name <- subset_on_x[y + 1, "Foto"]
     
-      filename <- normalizePath(file.path('./www', food_name))
-      list(src = filename, width = "auto",
+      #filename <- normalizePath(file.path('./www', food_name))
+      list(src = paste("www/",food_name, sep=""), width = "auto",
            height = "100%", align = "center")
     }, deleteFile=FALSE)
     
