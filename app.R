@@ -52,30 +52,68 @@ infotab <- fluidPage(
                "<br><br><center> <h1>Was Ihr hier finden werdet</h1> </center><br>"
              ),
              shiny::HTML(
-               "<h5>Eine Möglichkeit Daten zu verstehen und zu visualisieren.... TODO</h5>"
+             
+             "<h5> Wir wollen euch mit dieser Web-App dabei unterstützen, Daten und die 
+             Darstellung von Daten besser zu verstehen. Das ist nämlich eine
+             wichtige Grundlage für Diagnostik und kann euch dabei helfen, die
+             Inhalte der Vorlesung besser nachzuvollziehen.
+             <br>
+             <br>
+             Dafür machen wir ein kleines Experiment, bei dem wir echte Daten sammeln.
+             <br>
+             <br> 
+             Wir schreiben nämlich jeden Tag auf:
+             <ul>
+             <br>
+             <li>ob wir selbst
+               gekocht oder uns etwas bestellt haben</li>
+             <li>wie teuer unser
+               Essen war</li>
+             <li>wie lange es
+               gedauert hat</li>
+             <li>wie gut das Essen
+               geschmeckt hat</li>
+             <li>wie viel Spaß wir
+               dabei hatten</li>
+             </ul>
+             <br>
+             <br>
+             Diese Daten tragen wir in die Tabelle ein (Unterpunkt 'Daten' im linken Menü).
+             <br>
+             <br>
+             <a href='https://everydata.de'>Hier</a> könnt ihr die Entwicklung der Daten mitverfolgen. 
+             Unter „Merkmale“ könnt ihr die jeweiligen Merkmale (Kategorie, Kosten, Zeit, Geschmack, Fun) 
+             einzeln auswählen und schauen, wie sich die Datensammlung entwickelt.
+             <br>
+             <br>
+             Wenn ihr Kategorie auswählt, seht ihr, wie viele Gerichte selbst gekocht oder bestellt wurden.
+             <br>
+             Wenn ihr Kosten auswählt, seht ihr, wie viele Gerichte wie viel gekostet haben. 
+             <br>
+             Wenn ihr Zeit auswählt, sehr ihr, wie viele Gerichte wie lange gedauert haben. 
+             <br>
+             Wenn ihr Geschmack auswählt, sehr ihr, wie viele Gerichte wie gut geschmeckt haben.
+             <br>
+             Wenn ihr Fun auswählt, seht, ihr, wie viele Gerichte wie viel Spaß gemacht haben.
+             <br>
+             <br>
+             Außerdem könnt ihr im linken Menü 'Hypothesen' sehen, ob unsere Annahmen stimmen oder nicht. 
+             Jeden Tag werden die Grafiken ein bisschen anders aussehen, weil schließlich immer 
+             mehr Daten dazukommen und am Ende können wir dann ein Fazit ziehen. 
+             <br>
+             <br>
+             Wir freuen uns, wenn ihr mitmacht!
+             <br>
+             <br>
+             Ella, Lea und Katrin
+             
+             <h5>"
              )
            ),
            column(3)),
   
   fluidRow(style = "height:50px;"),
   
-  # PAGE BREAK
-  tags$hr(),
-  
-  # HOW
-  fluidRow(column(3),
-           column(
-             6,
-             shiny::HTML(
-               "<br><br><center> <h1>Wie diese Seite Euch helfen kann</h1> </center><br>"
-             ),
-             shiny::HTML(
-               "<h5>Ihr könnt die Daten anschauen und frei entscheiden, was Ihr wie visualisieren wollt. Außerdem helfen wir Euch bei den Übungen und erklären Euch
-               interessante Konzepte hier und auf unserem Instagram Account oder auf Moodle:</h5>"
-             )
-           ),
-           column(3)),
-  fluidRow(style = "height:25px;"),
   fluidRow(column(3),
            column(
              6,
@@ -90,8 +128,7 @@ infotab <- fluidPage(
              )
            ),
            column(3)),
-  fluidRow(style = "height:50px;"),
-  
+
   # PAGE BREAK
   tags$hr(),
   
@@ -115,7 +152,7 @@ infotab <- fluidPage(
                width = "600px",
                align = "center",
                div(tags$img(
-                 src = "www/ella.png",
+                 src = "ella.jpeg",
                  width = "50px",
                  height = "50px"
                )),
@@ -134,7 +171,7 @@ infotab <- fluidPage(
                width = "600px",
                align = "center",
                div(tags$img(
-                 src = "katrin.png",
+                 src = "katrin.jpeg",
                  width = "50px",
                  height = "50px"
                )),
@@ -143,7 +180,9 @@ infotab <- fluidPage(
                      tags$i("Mensch-Computer Mensch und kreativer Kopf")
                    )),
                div(style = "height:10%;"),
-               div("Grafiken? Kann ich. Blablab")
+               div("Ich bin Katrin, promoviere gerade am Lehrstuhl und beschäftige mich größtenteils mit 
+               Child-Robot Interaction. Manchmal bin ich auch kreativ und arbeite gerne mit Studierenden zusammen. 
+                   Ich liebe Sushi!")
              )
            ),
     # Lea
@@ -153,17 +192,19 @@ infotab <- fluidPage(
                width = "600px",
                align = "center",
                div(tags$img(
-                 src = "lea.png",
+                 src = "lea.jpeg",
                  width = "50px",
                  height = "50px"
                )),
                div(tags$h5("Lea"),
                    tags$h6(
-                     tags$i("Informatikerin und Verantwortlich für die Shiny-App")
+                     tags$i("Informatikerin und verantwortlich für die Shiny-App")
                    )),
                div(style = "height:10%;"),
                div(
-                 "Wenn es um die Entwicklung von IT-Lösungen in interdisziplinären Teams geht bin ich immer gern dabei!"
+                 "Ich bin Lea, habe Informatik studiert und arbeite mittlerweile als wissenschaftliche Mitarbeiterin
+                 an der Uni in Essen. Wenn es um die Entwicklung von IT-Lösungen in interdisziplinären Teams geht 
+                 bin ich immer gern dabei. Ich liebe koreanisches Essen!"
                )
              )
            ),
@@ -179,7 +220,7 @@ infotab <- fluidPage(
                6,
                shiny::HTML("<br><br><center> <h1>Bereit loszulegen?</h1> </center><br>"),
                shiny::HTML(
-                 "<h5>Wir empfehlen Euch, mit der Betrachtung der Visualisierungen zu beginnen.</h5>"
+                 "<h5>Schaut Euch doch mal die Visualisierungen an. Kann man jetzt schon sehen, ob unsere Annahmen stimmen?</h5>"
                )
              ),
              column(3)),
@@ -189,7 +230,7 @@ infotab <- fluidPage(
                     tags$div(
                       align = "center",
                       tags$a("Los geht's!",
-                             onclick = "fakeClick('vis')",
+                             onclick = "https://everydata.de",
                              class = "btn btn-primary btn-lg")
                     )),
              column(3)),
@@ -219,11 +260,34 @@ infotab <- fluidPage(
             tabPanel("Beim selber kochen spart man Geld.", plotOutput("teuer")),
             tabPanel("Essen gehen oder bestellen geht schneller.",  plotOutput("zeit")),
             tabPanel("Selber kochen ist gesünder.",  plotOutput("gesundheit")),
-            tabPanel("Selber kochen schmeckt genauso gut wie Essen bestellen oder gehen",  plotOutput("geschmack")),
-            tabPanel("Essen gehen macht Spaß!",  plotOutput("fun"))
+            tabPanel("Selber kochen schmeckt genauso gut wie Essen bestellen oder gehen.",  plotOutput("geschmack")),
+            tabPanel("Essen gehen macht mehr Spaß.",  plotOutput("fun"))
           ))
     ),
-  )
+    
+    fluidRow(
+      box(
+        width = 4,
+        h3("Ella"),
+        infoBoxOutput("EssenElla", width = 12),
+        infoBoxOutput("ZeitElla", width = 12),
+        infoBoxOutput("AusgabenElla", width = 12)
+      ),
+      box(
+        width = 4,
+        h3("Katrin"),
+        infoBoxOutput("EssenKatrin", width=12),
+        infoBoxOutput("ZeitKatrin", width = 12),
+        infoBoxOutput("AusgabenKatrin", width = 12)
+      ),
+      box(
+        width = 4,
+        h3("Lea"),
+        infoBoxOutput("EssenLea" , width = 12),
+        infoBoxOutput("ZeitLea", width = 12),
+        infoBoxOutput("AusgabenLea", width = 12)
+      )
+  ))
   
   ui <- dashboardPage(
     skin = "yellow",
@@ -247,7 +311,7 @@ infotab <- fluidPage(
           icon = icon("female")
         ),
         notificationItem(
-          text = ("Frau Angela Heine: angela.heine@uni-due.de"),
+          text = ("Prof. Heine: angela.heine@uni-due.de"),
           icon = icon("chalkboard-teacher")
         )
       )
@@ -260,7 +324,7 @@ infotab <- fluidPage(
       ),
       menuItem("Hypothesen", tabName = "hypothesen", icon = icon("lightbulb")),
       menuItem("Daten", tabName = "data", icon = icon("table")),
-      menuItem("Übungen", tabName = "exercises", icon = icon("award")),
+      # menuItem("Übungen", tabName = "exercises", icon = icon("award")),
       menuItem("Info", tabName = "info", icon = icon("question"))
     )),
     dashboardBody(tabItems(
@@ -280,15 +344,15 @@ infotab <- fluidPage(
         ),
         
         fluidRow(
-          box(title = "Eine Übersicht  - Klicke um ein Bild zu sehen!", plotOutput("essen_overall", click="hist_click")),
+          box(title = "Eine Übersicht", plotOutput("essen_overall", click="hist_click")),
           # box(verbatimTextOutput("x_value"),
           #     verbatimTextOutput("selected_rows")),
-          box(title= "Hier das leckere Essen (klicke auf einen der Säulen in der Übersicht): ", textOutput("foodname"), plotOutput("foodimg"), align="center")
+          box(title= "Hier das leckere Essen - klicke auf eine der Säulen in der Übersicht: ", textOutput("foodname"), plotOutput("foodimg"), align="center")
         ),
         fluidRow(                                                                         
           box(width=6,title = "Histogram", plotOutput("plot1")),
           box(
-            title = "Kategorie",
+            title = "Merkmal",
             radioButtons(
               "category",
               "Wähle eine Spalte:",
@@ -298,9 +362,9 @@ infotab <- fluidPage(
               "input.category == 'Zeit' | input.category == 'Kosten'| input.category == 'Geschmack'| input.category == 'Fun'",
               sliderInput(
                 inputId = "bins",
-                label = "Number of bins:",
+                label = "Anzahl der Balken:",
                 min = 1,
-                max = 10,
+                max = 30,
                 value = 3
               )
             )
@@ -358,8 +422,84 @@ infotab <- fluidPage(
           fill = TRUE
         )
       })
+    output$EssenElla <-
+      renderInfoBox({
+        infoBox(
+          "Essen",
+          nrow(values$datatable[which(values$datatable$Name == "Ella"), ]),
+          icon = icon("hamburger"),
+          color = "teal"        )
+      })
+    
+    output$ZeitElla <-
+      renderInfoBox({
+        infoBox("Minuten",
+                sum(values$datatable[which(values$datatable$Name == "Ella"), ]$Zeit),
+                icon = icon("clock"),color="teal")
+      })
+    output$AusgabenElla <-
+      renderInfoBox({
+        infoBox(
+          "Euro",
+          sum(values$datatable[which(values$datatable$Name == "Ella"), ]$Kosten),
+          icon = icon("euro-sign"),
+          color = "teal"
+        )
+      })
+    output$EssenKatrin <-
+      renderInfoBox({
+        infoBox(
+          "Essen",
+          nrow(values$datatable[which(values$datatable$Name == "Katrin"), ]),
+          icon = icon("hamburger"),
+          color = "light-blue",
+        )
+      })
+    
+    output$ZeitKatrin <-
+      renderInfoBox({
+        infoBox("Minuten",
+                sum(values$datatable[which(values$datatable$Name == "Katrin"), ]$Zeit),
+                icon = icon("clock"), color = "light-blue"
+                )
+      })
+    output$AusgabenKatrin <-
+      renderInfoBox({
+        infoBox(
+          "Euro",
+          sum(values$datatable[which(values$datatable$Name == "Katrin"), ]$Kosten),
+          icon = icon("euro-sign"),
+          color = "light-blue",
+        )
+      })
+    output$EssenLea <-
+      renderInfoBox({
+        infoBox(
+          title = "Essen",
+          nrow(values$datatable[which(values$datatable$Name == "Lea"), ]),
+          icon = icon("hamburger"),
+          color = "navy"
+        )
+      })
+    
+    output$ZeitLea <-
+      renderInfoBox({
+        infoBox("Minuten",
+                sum(values$datatable[which(values$datatable$Name == "Lea"), ]$Zeit ),
+                icon = icon("clock"),color="navy")
+      })
+    output$AusgabenLea <-
+      renderInfoBox({
+        infoBox(
+          "Euro",
+          sum(values$datatable[which(values$datatable$Name == "Lea"), ]$Kosten ),
+          icon = icon("euro-sign"),
+          color = "navy"
+        )
+      })
     output$table <- DT::renderDataTable({
-      values$datatable
+      
+      subset(values$datatable, select=-c(Foto,Tag))
     },  rownames = FALSE, options = list(language = de))
     
     # Downloadable csv of selected dataset

@@ -5,7 +5,7 @@ Katrin;Pizza Buffalina;Essen gegangen;10.00;10;850;10;10;e_o_pizza_buffalina.jpe
 Lea;Reis mit Rahmsoße (Hähnchen, Spinat, Champis);selbstgekocht;3.23;20;812;8.5;7;k_h_reisrahmsoße_n.jpeg;2
 Ella;Spaghetti + selbstgemachtes Pesto;selbstgekocht;2.54;15;650;7;6;e_h_pesto_n.jpeg;2
 Katrin;Gazpacho + Lachsforelle auf Linsensalat;Essen gegangen;24.00;28;345;7;9;e_o_gazpacho.jpeg;2
-Katrin;Döner und Pide (halb/halb);bestellt;5.25;25;800;6;7;k_o_doenerpide.jpeg;3
+Katrin;Döner und Pide (halb/halb);bestellt;5.25;10;800;6;7;k_o_doenerpide.jpeg;3
 Lea;Orzonudeln;selbstgekocht;6.10;20;450;9;8;l_h_orzo_n.jpeg;3
 Ella;Tomatentarte;selbstgekocht;2.60;25;610;10;9;e_h_tomatentarte_n.jpeg;3
 Lea;Pommes;bestellt;3.00;0;518;7.5;5;l_o_pommes.jpeg;4
@@ -15,7 +15,7 @@ Lea;Carbonara + Salat;bestellt;19.00;0;580;4;7;l_o_nudelnsalat.jpeg;5
 Katrin;Gemüsecurry mit Reis und Naan;bestellt;10.90;0;663;8;8;e_o_gemuesecurry.jpeg;5
 Ella;Reis mit Hähnchen und Zuckerschoten;selbstgekocht;2.90;25;460;8;7;e_h_reis_zuckerschoten_n.jpeg;5
 Lea;Käsespätzle;Essen gegangen;9.00;10;715;7;9;l_o_kaesespaetzle.jpeg;6
-Katrin;Burger;bestellt;8.25;65;700;9;9;k_o_burger_1.jpeg;6
+Katrin;Burger;bestellt;8.25;0;700;9;9;k_o_burger_1.jpeg;6
 Ella;Kartoffelsalat;selbstgekocht;1.29;20;256;9;5;e_h_kartoffelsalat_n.jpeg;6
 Lea;Kartoffeln mit Quark;selbstgekocht;2.30;5;417;7.5;6;l_h_kartoffelnquark_n.jpeg;7
 Katrin;Hot Pot;Essen gegangen;35.89;20;650;10;10;k_o_hotpot.jpeg;7
@@ -38,7 +38,7 @@ Lea;Gebratener Reit mit Rindfleisch;selbstgekocht;5.30;25;660;9;9;k_h_reisrindfl
 Katrin;Sushi;bestellt;15.20;0;530;9.5;10;k_o_sushi_4.jpeg;13
 Ella;Nudeln mit Pfifferlingen und Garnelen;selbstgekocht;4.01;20;485;9;6;e_h_nudeln_garnele_pilze_n.jpeg;13
 Lea;Pizza Buffala;Essen gegangen;12.00;25;850;9;8.5;l_o_pizzabuffala.jpeg;13
-Katrin;Flammkuchen;bestellt;9.50;40;530;9;8;e_o_flammkuchen.jpeg;14
+Katrin;Flammkuchen;bestellt;9.50;0;530;9;8;e_o_flammkuchen.jpeg;14
 Ella;Reis-Linsen-Salat mit Joghurt;selbstgekocht;0.82;30;377;10;7;e_h_reislinsen.jpeg;14
 Lea;Grüner Teller;Essen gegangen;12.50;8;285;10;10;l_o_gruenersalat.jpeg;14
 Katrin;Sushi;Essen gegangen;14.50;18;620;8;9;k_o_sushi_2.jpeg;15
