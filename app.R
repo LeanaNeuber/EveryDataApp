@@ -161,7 +161,7 @@ infotab <- fluidPage(
                      tags$i("Psychologin, Projektleiterin und Instagram-Beauftragte")
                    )),
                div(style = "width:10%;"),
-               div("Ich liebe es, blablabla....")
+               div("Ich bin Ella und bald fertig mit meinem Master in Psychologie. Ich interessiere mich für Unterschiede in der Motivation von verschiedenen Menschen. Derzeit beschäftige ich mich vor allem mit interindividuellen Unterschieden in moralischen Entscheidungsprozessen und was diese beeinflusst. Ich liebe fast alle Arten von Suppen!")
              )
            ),
     # Katrin
@@ -206,13 +206,12 @@ infotab <- fluidPage(
                  an der Uni in Essen. Wenn es um die Entwicklung von IT-Lösungen in interdisziplinären Teams geht 
                  bin ich immer gern dabei. Ich liebe koreanisches Essen!"
                )
-             )
-           ),
-    # column(3)),
+             ),
+           
+     column(3)),
     
-    
-    # PAGE BREAK
-    tags$hr(),
+    fluidRow(),
+
     
     
     fluidRow(column(3),
