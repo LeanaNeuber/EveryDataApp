@@ -7,7 +7,9 @@ library(dplyr)
 library(plotly)
 
 #####################
-day = 0
+day = 1
+show_histo = 0
+show_normaldist = 0
 ####################
 
 de <- list(
@@ -32,54 +34,112 @@ de <- list(
 )
 
 normalverteilung <- fluidPage(
-  tabItem(
-    tabName = "dashboard",
-    fluidRow(box(width = 12,
-                 uiOutput("slider"))),
-    fluidRow(
-      column(3,titlePanel("Fun with Data!"),
-             tags$hr(),
-             fluidRow(column(6,
-                             radioButtons('uni', 'Universität',
-                                          c("FU"='fu',
-                                            "UDE"='ude'))),
-                      column(6,
-                             radioButtons('gender', 'Geschlecht',
-                                          c(
-                                            "Alle" = "all",
-                                            "Weiblich" = "Female",
-                                            "Männlich" = "Male"
-                                          )))),
-             checkboxInput('compare', 'Vergleich?', FALSE),
-             conditionalPanel(
-               "input.compare == 1",
-               fluidRow(column(6,
-                               radioButtons('uni_comp', 'Universität',
-                                            c("FU"='fu',
-                                              "UDE"='ude'))),
-                        column(6,
-                               radioButtons('gender_comp', 'Geschlecht',
-                                            c(
-                                              "Alle" = "all",
-                                              "Weiblich" = "Female",
-                                              "Männlich" = "Male"
-                                            ))))),
-             column(width= 12, DT::dataTableOutput("dataview"), style = "overflow-x: scroll;")
-      ),
+  fluidRow(tabsetPanel(
+    tabPanel(
+      "Normalverteilung verstehen lernen!",
+      fluidRow(box(width = 12,
+                   uiOutput("slider")), style = "padding-left:2%;padding-right:2%;padding-top:2%"),
+      fluidRow(
+        style = "padding-left:2%;padding-right:2%;padding-top:2%",
+        column(
+          3,
+          titlePanel("Fun with Data!"),
+          tags$hr(),
+          fluidRow(column(6,
+                          radioButtons(
+                            'uni', 'Universität',
+                            c("FU" = 'fu',
+                              "UDE" = 'ude')
+                          )),
+                   column(
+                     6,
+                     radioButtons(
+                       'gender',
+                       'Geschlecht',
+                       c(
+                         "Alle" = "all",
+                         "Weiblich" = "Female",
+                         "Männlich" = "Male"
+                       )
+                     )
+                   )),
+          column(
+            width = 12,
+            DT::dataTableOutput("dataview"),
+            style = "overflow-x: scroll;"
+          )
+        ),
+        
+        column(
+          9,
+          box(
+            width = NULL,
+            status = "primary",
+            plotlyOutput("main_plot")
+          ),
+          box(
+            width = NULL,
+            actionButton("add", "Füge 5 hinzu!"),
+            actionButton("minus", "Entferne 5!")
+          )
+        )
+      )
       
-      column(9,
-             box(
-               width = NULL, status = "primary",
-               plotlyOutput("main_plot")
-             ),
-             box(
-               width = NULL,
-               actionButton("add", "Füge 5 hinzu!"),
-               actionButton("minus", "Entferne 5!")
-             )
+    ),
+    tabPanel(
+      "Normalverteilungen vergleichen!",
+      
+      fluidRow(
+        style = "padding-left:2%;padding-right:2%;padding-top:2%",
+        box(title = "Datenset 1",
+            column(
+              6,
+              radioButtons('uni_base', 'Universität',
+                           c("FU" = 'fu',
+                             "UDE" = 'ude'), selected = "fu")
+            ),
+            column(
+              6,
+              radioButtons(
+                'gender_base',
+                'Geschlecht',
+                c(
+                  "Alle" = "all",
+                  "Weiblich" = "Female",
+                  "Männlich" = "Male"
+                )
+              )
+            )),
+        box(title = "Datenset 2",
+            column(
+              6,
+              radioButtons('uni_comp', 'Universität',
+                           c("FU" = 'fu',
+                             "UDE" = 'ude'), selected = "ude")
+            ),
+            column(
+              6,
+              radioButtons(
+                'gender_comp',
+                'Geschlecht',
+                c(
+                  "Alle" = "all",
+                  "Weiblich" = "Female",
+                  "Männlich" = "Male"
+                )
+              )
+            )),
+        
+      ),
+      fluidRow(
+        style = "padding-left:2%;padding-right:2%;padding-top:2%",
+        box(width = 12,
+            status = "primary",
+            plotlyOutput("comp_plot")
+        )
       )
     )
-  )
+  ))
 )
 
 infotab <- fluidPage(
@@ -105,10 +165,7 @@ infotab <- fluidPage(
              ),
              shiny::HTML(
              
-             "<h5> Wir wollen euch mit dieser Web-App dabei unterstützen, Daten und die 
-             Darstellung von Daten besser zu verstehen. Das ist nämlich eine
-             wichtige Grundlage für Diagnostik und kann euch dabei helfen, die
-             Inhalte der Vorlesung besser nachzuvollziehen.
+             "<h5> Wir wollen euch mit dieser Web-App dabei unterstützen, Daten und die Darstellung von Daten besser zu verstehen. Das ist nämlich eine wichtige Grundlage für Diagnostik und kann euch dabei helfen, die Inhalte der Vorlesung besser nachzuvollziehen. 
              <br>
              <br>
              Dafür machen wir ein kleines Experiment, bei dem wir echte Daten sammeln.
@@ -133,25 +190,10 @@ infotab <- fluidPage(
              Diese Daten tragen wir in die Tabelle ein (Unterpunkt 'Daten' im linken Menü).
              <br>
              <br>
-             <a href='https://everydata.de'>Hier</a> könnt ihr die Entwicklung der Daten mitverfolgen. 
-             Unter „Merkmale“ könnt ihr die jeweiligen Merkmale (Kategorie, Kosten, Zeit, Geschmack, Fun) 
-             einzeln auswählen und schauen, wie sich die Datensammlung entwickelt.
+             Außerdem könnt ihr unter dem Punkt 'Hypothesen' (im linken Menü) sehen, ob unsere Annahmen stimmen oder nicht. Dafür müsst ihr nur die jeweilige Hypothese auswählen, dann seht ihr ein Balkendiagramm mit jeweils einem Balken für selbstgekocht, bestellt und Essen gegangen.
+            <br>
              <br>
-             <br>
-             Wenn ihr Kategorie auswählt, seht ihr, wie viele Gerichte selbst gekocht oder bestellt wurden.
-             <br>
-             Wenn ihr Kosten auswählt, seht ihr, wie viele Gerichte wie viel gekostet haben. 
-             <br>
-             Wenn ihr Zeit auswählt, sehr ihr, wie viele Gerichte wie lange gedauert haben. 
-             <br>
-             Wenn ihr Geschmack auswählt, sehr ihr, wie viele Gerichte wie gut geschmeckt haben.
-             <br>
-             Wenn ihr Fun auswählt, seht, ihr, wie viele Gerichte wie viel Spaß gemacht haben.
-             <br>
-             <br>
-             Außerdem könnt ihr im linken Menü 'Hypothesen' sehen, ob unsere Annahmen stimmen oder nicht. 
-             Jeden Tag werden die Grafiken ein bisschen anders aussehen, weil schließlich immer 
-             mehr Daten dazukommen und am Ende können wir dann ein Fazit ziehen. 
+             Jeden Tag werden die Grafiken ein bisschen anders aussehen, weil schließlich immer mehr Daten dazukommen. Am Ende können wir dann ein Fazit ziehen. 
              <br>
              <br>
              Wir freuen uns, wenn ihr mitmacht!
@@ -312,35 +354,10 @@ infotab <- fluidPage(
           tabPanel("Geschmack", br(), "Selber kochen schmeckt genauso gut wie Essen bestellen oder gehen.",  plotlyOutput("piegeschmack")),
           tabPanel("Spaß", br(), "Essen gehen macht mehr Spaß als selbst zu kochen.", plotlyOutput("piespass"))
         )))
-    # fluidRow(
-    #   box( 
-    #       title = "Geld", status = "warning", "Beim selber kochen spart man mehr Geld als beim Essen bestellen.",
-    #       plotlyOutput("piegeld")
-    #   ),
-    #   box(
-    #       title = "Zeit", status = "warning", "Selber kochen dauert länger als sich etwas zum Essen zu bestellen.",
-    #       plotlyOutput("piezeit")
-    #   ),
-    #   box(
-    #       title = "Gesundheit", status = "warning", "Selber kochen ist gesünder als Essen bestellen.",
-    #       plotlyOutput("piegesundheit")
-    #   )
-    # ),
-    # fluidRow(
-    #   box(
-    #       title = "Geschmack", status = "warning", "Selber kochen schmeckt genau so gut wie Essen bestellen oder Essen gehen.",
-    #       plotlyOutput("piegeschmack")
-    #   ),
-    #   box(
-    #       title = "Spaß", status = "warning", "Essen gehen macht mehr Spaß als selbst zu kochen.",
-    #       plotlyOutput("piespass")
-    #   )
-    # )
   )
   
   hypothesen <- fluidPage(
     fluidRow(
-      # box(title = "Wie steht's um den Spaß?", plotOutput("pie1")),
       box(width = 12, title = "Hypothesen",
           tabsetPanel(
             tabPanel("Beim selber kochen spart man Geld.", plotOutput("teuer")),
@@ -375,6 +392,36 @@ infotab <- fluidPage(
       )
   ))
   
+  histo <- fluidPage(
+    fluidRow(
+      box(width=6,title = "", plotOutput("plot1")),
+      box(
+        title = "Merkmal",
+        radioButtons(
+          "category",
+          "Wähle eine Spalte:",
+          choices = c("Kategorie", "Kosten", "Zeit", "Geschmack", "Fun")
+        ),
+        conditionalPanel(
+          "input.category == 'Zeit' | input.category == 'Kosten'| input.category == 'Geschmack'| input.category == 'Fun'",
+          sliderInput(
+            inputId = "bins",
+            label = "Anzahl der Balken:",
+            min = 1,
+            max = 30,
+            value = 10
+          )
+        )
+      ), 
+    ),
+    fluidRow(
+      box(width=12, title= "Wähle einen Tag",
+          sliderInput("dayslide", "Achtung: Die Daten des Dashboards werden auch angepasst!",
+                      min = 0, max = day, value = day, step = 1, ticks = TRUE,
+          )),
+    )
+  )
+  
   ui <- dashboardPage(
     skin = "yellow",
     dashboardHeader(
@@ -406,12 +453,13 @@ infotab <- fluidPage(
       menuItem(
         "Dashboard",
         tabName = "dashboard",
-        icon = icon("chart-bar")
+        icon = icon("tachometer-alt")
       ),
       menuItem("Hypothesen", tabName = "hypothesen", icon = icon("lightbulb")),
       menuItem("Eure Umfrage", tabName = "umfrage", icon = icon("poll-h")),
+      if(show_histo) menuItem("Entwicklung über die Zeit", tabName = "histo", icon=icon("chart-bar")),
       menuItem("Daten", tabName = "data", icon = icon("table")),
-      menuItem("Exkurs: Normalverteilung", tabName = "normalverteilung", icon = icon("balance-scale-left")),
+      if(show_normaldist) menuItem("Exkurs: Normalverteilung", tabName = "normalverteilung", icon = icon("balance-scale-left")),
       # menuItem("Übungen", tabName = "exercises", icon = icon("award")),
       menuItem("Info", tabName = "info", icon = icon("question"))
     )),
@@ -419,12 +467,12 @@ infotab <- fluidPage(
       # First tab content
       tabItem(
         tabName = "dashboard",
-        fluidRow(
-          box(width=12,
-              sliderInput("dayslide", "Wähle einen Tag:",
-                          min = 0, max = day, value = day, step = 1, ticks = TRUE,
-              )),
-        ),
+        # fluidRow(
+        #   box(width=12,
+        #       sliderInput("dayslide", "Wähle einen Tag:",
+        #                   min = 0, max = day, value = day, step = 1, ticks = TRUE,
+        #       )),
+        # ),
         fluidRow(
           infoBoxOutput("Essen"),
           infoBoxOutput("Zeit"),
@@ -432,38 +480,16 @@ infotab <- fluidPage(
         ),
         
         fluidRow(
-          box(title = "Eine Übersicht", plotOutput("essen_overall", click="hist_click")),
+          box(title = "Wer hat was gegessen? Klicke auf einen Balken im Diagram um es zu sehen!", plotOutput("essen_overall", click="hist_click")),
           # box(verbatimTextOutput("x_value"),
           #     verbatimTextOutput("selected_rows")),
-          box(title= "Hier das leckere Essen - klicke auf eine der Säulen in der Übersicht: ", textOutput("foodname"), plotOutput("foodimg"), align="center")
-        ),
-        fluidRow(                                                                         
-          box(width=6,title = "Histogram", plotOutput("plot1")),
-          box(
-            title = "Merkmal",
-            radioButtons(
-              "category",
-              "Wähle eine Spalte:",
-              choices = c("Kategorie", "Kosten", "Zeit", "Geschmack", "Fun")
-            ),
-            conditionalPanel(
-              "input.category == 'Zeit' | input.category == 'Kosten'| input.category == 'Geschmack'| input.category == 'Fun'",
-              sliderInput(
-                inputId = "bins",
-                label = "Anzahl der Balken:",
-                min = 1,
-                max = 30,
-                value = 3
-              )
-            )
-          ), 
-          box(title = "Wie steht's um den Spaß?", plotOutput("pie1"))
-        ),
-        fluidRow()
+          box(title= "Hier das leckere Essen:", textOutput("foodname"), plotOutput("foodimg"), align="center")
+        )
       ),
       
       tabItem(tabName= "hypothesen", hypothesen),
       tabItem(tabName= "umfrage", umfrage),
+      tabItem(tabName="histo", histo),
       # Second tab content
       tabItem(tabName = "data",
               datentab),
@@ -658,17 +684,34 @@ infotab <- fluidPage(
       }
     )
     output$plot1 <-  renderPlot({
-      if (input$category == "Zeit" |
-          input$category == "Kosten" |
-          input$category == "Geschmack" |
-          input$category == "Fun")  {
+      if (input$category == "Zeit")  {
         ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
                                                                                     input$bins,
-                                                                                  fill = "#098474")+ylab("Anzahl")
+                                                                                  fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Zeit in Minuten")+theme(axis.text=element_text(size=12),
+                                                                                                                                                                          axis.title=element_text(size=12))
+      }
+      else if (input$category == "Kosten")  {
+        ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
+                                                                                           input$bins,
+                                                                                         fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Kosten in €")+theme(axis.text=element_text(size=12),
+                                                                                                                                                                             axis.title=element_text(size=12))
+      }
+      else if (input$category == "Geschmack")  {
+        ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
+                                                                                           input$bins,
+                                                                                         fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Geschmack von 1 bis 10")+theme(axis.text=element_text(size=12),
+                                                                                                                                                                                        axis.title=element_text(size=12))
+      }
+      else if (input$category == "Fun")  {
+        ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
+                                                                                           input$bins,
+                                                                                         fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Fun von 1 bis 10")+theme(axis.text=element_text(size=12),
+                                                                                                                                                                                  axis.title=element_text(size=12))
       }
       # else if(input$category == "Name"){ggplot(data = datatable, aes(x = Name, fill= Gericht)) + theme(legend.position = "none") + geom_bar(stat = "count")+ylab("Anzahl")}
       else{
-        ggplot(data = values$datatable, aes_string(x = input$category)) + geom_bar(stat = "count", fill= "#098474")+ylab("Anzahl")
+        ggplot(data = values$datatable, aes_string(x = input$category)) + geom_bar(stat = "count", fill= "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Kategorie (bestellt, gekocht?)")+theme(axis.text=element_text(size=12),
+                                                                                                                                                                                                         axis.title=element_text(size=12))
       }
     })
     output$essen_overall <- renderPlot({
@@ -691,8 +734,9 @@ infotab <- fluidPage(
     output$teuer <- renderPlot({
       ggplot(data = values$datatable, aes(x = Kategorie, y = Kosten, fill= Kategorie))+ scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
         geom_bar(stat = "summary", fun = mean) +
-        xlab("Kategorie") +
-        ylab("Durchschnittliche Kosten")
+        xlab("") +
+        ylab("Durchschnittliche Kosten") +theme(axis.text=element_text(size=12),
+                                                axis.title=element_text(size=12))
     })
     
     output$foodname <- renderText({ 
@@ -707,8 +751,6 @@ infotab <- fluidPage(
       }
       if (roundy < 1) return(NULL)
       x <- lvls[roundy]
-      print('--------------')
-      print(x)
       subset_on_x <- subset(values$datatable, Name==x)
       rownames(subset_on_x) <- NULL
       max_row = nrow(subset_on_x) -1
@@ -742,43 +784,115 @@ infotab <- fluidPage(
     output$zeit <- renderPlot({
       ggplot(data = values$datatable, aes(x = Kategorie, y = Zeit, fill= Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
         geom_bar(stat = "summary", fun = mean) +
-        xlab("Kategorie") +
-        ylab("Durchschnittliche Zeit")
+        xlab("") +
+        ylab("Durchschnittliche Zeit") +theme(axis.text=element_text(size=12),
+                                              axis.title=element_text(size=12))
     })
     
     output$gesundheit <- renderPlot({
       ggplot(data = values$datatable, aes(x = Kategorie, y = Kalorien, fill= Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
         geom_bar(stat = "summary", fun = mean) +
-        xlab("Kategorie") +
-        ylab("Durchschnittliche Kalorien")
+        xlab("") +
+        ylab("Durchschnittliche Kalorien")+theme(axis.text=element_text(size=12),
+                                                 axis.title=element_text(size=12))
     })
     
     output$geschmack <- renderPlot({
       ggplot(data = values$datatable, aes(x = Kategorie, y = Geschmack, fill= Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
         geom_bar(stat = "summary", fun = mean) +
-        xlab("Kategorie") +
-        ylab("Durchschnittlicher Geschmack")
+        xlab("") +
+        ylab("Durchschnittlicher Geschmack")+theme(axis.text=element_text(size=12),
+                                                   axis.title=element_text(size=12))
     })
     
     output$fun <- renderPlot({
       ggplot(data = values$datatable, aes(x = Kategorie, y = Fun, fill=Kategorie)) + scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9")) +
         geom_bar(stat = "summary", fun = mean)  + 
-        xlab("Kategorie") +
-        ylab("Durchschnittliches Fun-Rating") 
+        xlab("") +
+        ylab("Durchschnittliches Fun-Rating") +theme(axis.text=element_text(size=12),
+                                                     axis.title=element_text(size=12))
     })
     
     
     #########################Normalverteilung#########################
+    df <- read.csv("students_cleaned.csv", sep = ",")
+    df_ude <- read.csv("students_ude.csv", sep = ",")
+    df['highlight'] <- 'no'
+    df_ude['highlight'] <- 'no'
+    
+    base <- reactiveValues(df = df[FALSE,])
+    comp <- reactiveValues(df = df[FALSE,])
+    
+    original <- reactiveValues(df = df[FALSE,])
+    values_original <- reactiveValues(datatable = df[FALSE,])
+    
+    updated <-
+      reactiveValues(dataframe = df[FALSE,], subset = NULL)
+    
+    observeEvent(input$uni_base, {
+      if (input$uni_base == "fu") {
+        base$df <- df
+        updateRadioButtons(session, 'gender_base',  selected = "all")
+        
+      }
+      else{
+        base$df <- df_ude
+        updateRadioButtons(session, 'gender_base',  selected = "all")
+      }
+    })
+    
+    observeEvent(input$uni_comp, {
+      if (input$uni_comp == "fu") {
+        comp$df <- df
+        updateRadioButtons(session, 'gender_comp',  selected = "all")
+      }
+      else{
+        comp$df <- df_ude
+        updateRadioButtons(session, 'gender_comp',  selected = "all")
+      }
+    })
+    
+    observeEvent(input$gender_base, {
+      if ((input$gender_base == "all") & (input$uni_base == "fu") ) {
+        base$df <- df
+      }
+      else if ((input$gender_base == "all") & (input$uni_base == "ude") ) {
+        base$df <- df_ude
+      }
+      else if ((input$gender_base != "all") & (input$uni_base == "fu") ) {
+        base$df <- filter(df, Geschlecht == input$gender_base)
+      }
+      else if ((input$gender_base != "all") & (input$uni_base == "ude") ){
+        base$df <- filter(df_ude, Geschlecht == input$gender_base)
+      }
+    })
+    
+    observeEvent(input$gender_comp, {
+      if ((input$gender_comp == "all") & (input$uni_comp == "fu") ) {
+        comp$df <- df
+      }
+      else if ((input$gender_comp == "all") & (input$uni_comp == "ude") ) {
+        comp$df <- df_ude
+      }
+      else if ((input$gender_comp != "all") & (input$uni_comp == "fu") ) {
+        comp$df <- filter(df, Geschlecht == input$gender_comp)
+      }
+      else if ((input$gender_comp != "all") & (input$uni_comp == "ude") ){
+        comp$df <- filter(df_ude, Geschlecht == input$gender_comp)
+      }
+    })
+    
+    
     observeEvent(input$uni, {
       if (input$uni == "fu") {
         original$df <- df
         values_original$datatable <- original$df
-        updateRadioButtons(session, 'gender', selected="all")
+        updateRadioButtons(session, 'gender', selected = "all")
       }
       else{
         original$df <- df_ude
         values_original$datatable <- original$df
-        updateRadioButtons(session, 'gender',  selected="all")
+        updateRadioButtons(session, 'gender',  selected = "all")
       }
     })
     
@@ -788,43 +902,23 @@ infotab <- fluidPage(
         values_original$datatable <- original$df
       }
       else{
-        values_original$datatable <- filter(original$df, Geschlecht == input$gender)
-      }
-    })
-    
-    observeEvent(input$uni_comp, {
-      if (input$uni_comp == "fu") {
-        compare$df <- df
-        values_comp$datatable <- compare$df
-        updateRadioButtons(session, 'gender_comp', selected="all")
-      }
-      else{
-        compare$df <- df_ude
-        values_comp$datatable <- compare$df
-        updateRadioButtons(session, 'gender_comp',  selected="all")
-      }
-    })
-    
-    observeEvent(input$gender_comp, {
-      if (input$gender_comp == "all") {
-        values_comp$datatable <- compare$df
-      }
-      else{
-        values_comp$datatable <- filter(compare$df, Geschlecht == input$gender_comp)
+        values_original$datatable <-
+          filter(original$df, Geschlecht == input$gender)
       }
     })
     
     observeEvent(input$inputslider, {
-      updated$dataframe <- values_original$datatable[0:input$inputslider, ]
+      updated$dataframe <-
+        values_original$datatable[0:input$inputslider,]
     })
     
     observeEvent(input$add, {
-      if (input$inputslider < nrow(values_original$datatable)-1) {
+      if (input$inputslider < nrow(values_original$datatable) - 1) {
         updateSliderInput(session, "inputslider", value = input$inputslider + 5)
         values_original$datatable['highlight'] = 'no'
-        values_original$datatable[(input$inputslider + 1):(input$inputslider + 5), ]['highlight'] = 'yes'
+        values_original$datatable[(input$inputslider + 1):(input$inputslider + 5),]['highlight'] = 'yes'
         updated$subset <-
-          values_original$datatable[(input$inputslider + 1):(input$inputslider + 5), ]
+          values_original$datatable[(input$inputslider + 1):(input$inputslider + 5),]
       }
     })
     
@@ -848,35 +942,68 @@ infotab <- fluidPage(
       )
     })
     
-    output$printslide <- renderText({
-      paste("Momentan:", input$inputslider, sep = " ")
-    })
-    
     output$main_plot <- renderPlotly({
       if (dim(updated$dataframe)[1] == 0)
         return(NULL)
       gg <-
-        ggplot(updated$dataframe, aes(x = Größe, text = paste0("Größe: ",x, ", Anzahl: ",..count..))) +
-        geom_histogram(data = updated$dataframe, aes(fill = highlight),
-                       alpha = 0.5,
-                       binwidth = 1 ) +
-        geom_density(data = updated$dataframe, aes(y = ..count..), alpha=0.5) +
+        ggplot(updated$dataframe, aes(
+          x = Größe,
+          text = paste0("Größe: ", x, ", Anzahl: ", ..count..)
+        )) +
+        geom_histogram(
+          data = updated$dataframe,
+          aes(fill = highlight),
+          alpha = 0.5,
+          binwidth = 1
+        ) +
+        geom_density(data = updated$dataframe,
+                     aes(y = ..count..),
+                     alpha = 0.5) +
         ylab("Anzahl") +
         xlab("Größe in cm")  + theme(legend.title = element_blank()) + theme(legend.position = "none") + ggtitle("Größenverteilung")
-      
-      if(input$compare == 1){
-        gg <- gg + geom_histogram(data = values_comp$datatable, alpha = 0.5,binwidth = 1, fill = "#69b3a2" ) +
-          geom_density(data = values_comp$datatable, aes(y = ..count..), alpha=1, color = "#69b3a2")
-      }
       ggplotly(gg, tooltip = "text")
       
+    })
+    
+    output$comp_plot <- renderPlotly({
+      gg <-
+        ggplot(base$df, aes(
+          x = Größe,
+          text = paste0("Größe: ", x, ", Anzahl: ", ..count..)
+        )) +
+        geom_histogram(
+          aes(fill='Datenset 1'),
+          data = base$df,
+          alpha = 0.5,
+          binwidth = 1
+        ) +
+        geom_histogram(
+          aes(fill='Datenset 2'),
+          data = comp$df,
+          alpha = 0.7,
+          binwidth = 1
+        ) +
+        geom_density(data = base$df,
+                     aes(y = ..count..),
+                     alpha = 0.7, color = '#00798c') +
+        geom_density(data = comp$df,
+                     aes(y = ..count..),
+                     alpha = 0.7, color='#edae49') +
+        ylab("Anzahl") +
+        xlab("Größe in cm")  + theme(legend.title = element_blank()) + ggtitle("Größenverteilungen") + scale_fill_manual(values=c('#00798c','#edae49'))
+      ggplotly(gg, tooltip = "text")
       
     })
     
     output$dataview <- DT::renderDataTable({
-      datatable(updated$subset[c("Name", "Alter", "Größe")], options = list(paging = FALSE, searching= FALSE),  rownames = FALSE)
+      datatable(
+        updated$subset[c("Name", "Alter", "Größe")],
+        options = list(paging = FALSE, searching = FALSE),
+        rownames = FALSE
+      )
     })
     ############################################
   }
+  options(warn = -1) # ignore plotly weird warning
   
   shinyApp(ui, server)
