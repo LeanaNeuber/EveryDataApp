@@ -4,9 +4,10 @@ library(shinydashboard)
 library(DT)
 library(ggplot2)
 library(dplyr)
+library(plotly)
 
 #####################
-day = 20
+day = 0
 ####################
 
 de <- list(
@@ -28,6 +29,57 @@ de <- list(
   ),
   oAria = list(sSortAscending = ": aktivieren, um die Spalte in aufsteigender Reihenfolge zu sortieren",
                sSortDescending = ": activer aktivieren, um die Spalte in absteigender Reihenfolge zu sortieren")
+)
+
+normalverteilung <- fluidPage(
+  tabItem(
+    tabName = "dashboard",
+    fluidRow(box(width = 12,
+                 uiOutput("slider"))),
+    fluidRow(
+      column(3,titlePanel("Fun with Data!"),
+             tags$hr(),
+             fluidRow(column(6,
+                             radioButtons('uni', 'Universität',
+                                          c("FU"='fu',
+                                            "UDE"='ude'))),
+                      column(6,
+                             radioButtons('gender', 'Geschlecht',
+                                          c(
+                                            "Alle" = "all",
+                                            "Weiblich" = "Female",
+                                            "Männlich" = "Male"
+                                          )))),
+             checkboxInput('compare', 'Vergleich?', FALSE),
+             conditionalPanel(
+               "input.compare == 1",
+               fluidRow(column(6,
+                               radioButtons('uni_comp', 'Universität',
+                                            c("FU"='fu',
+                                              "UDE"='ude'))),
+                        column(6,
+                               radioButtons('gender_comp', 'Geschlecht',
+                                            c(
+                                              "Alle" = "all",
+                                              "Weiblich" = "Female",
+                                              "Männlich" = "Male"
+                                            ))))),
+             column(width= 12, DT::dataTableOutput("dataview"), style = "overflow-x: scroll;")
+      ),
+      
+      column(9,
+             box(
+               width = NULL, status = "primary",
+               plotlyOutput("main_plot")
+             ),
+             box(
+               width = NULL,
+               actionButton("add", "Füge 5 hinzu!"),
+               actionButton("minus", "Entferne 5!")
+             )
+      )
+    )
+  )
 )
 
 infotab <- fluidPage(
@@ -251,6 +303,41 @@ infotab <- fluidPage(
       mainPanel(dataTableOutput("table"), width = 8)
     ))
   
+  umfrage <- fluidPage(
+    fluidRow(box(width = 12, title = "Hypothesen",
+        tabsetPanel(
+          tabPanel("Geld", br(), "Beim selber kochen spart man Geld.", plotlyOutput("piegeld")),
+          tabPanel("Zeit", br(), "Selber kochen dauert länger als sich etwas zum Essen zu bestellen.", plotlyOutput("piezeit")),
+          tabPanel("Gesundheit", br(), "Selber kochen ist gesünder als Essen bestellen.",  plotlyOutput("piegesundheit")),
+          tabPanel("Geschmack", br(), "Selber kochen schmeckt genauso gut wie Essen bestellen oder gehen.",  plotlyOutput("piegeschmack")),
+          tabPanel("Spaß", br(), "Essen gehen macht mehr Spaß als selbst zu kochen.", plotlyOutput("piespass"))
+        )))
+    # fluidRow(
+    #   box( 
+    #       title = "Geld", status = "warning", "Beim selber kochen spart man mehr Geld als beim Essen bestellen.",
+    #       plotlyOutput("piegeld")
+    #   ),
+    #   box(
+    #       title = "Zeit", status = "warning", "Selber kochen dauert länger als sich etwas zum Essen zu bestellen.",
+    #       plotlyOutput("piezeit")
+    #   ),
+    #   box(
+    #       title = "Gesundheit", status = "warning", "Selber kochen ist gesünder als Essen bestellen.",
+    #       plotlyOutput("piegesundheit")
+    #   )
+    # ),
+    # fluidRow(
+    #   box(
+    #       title = "Geschmack", status = "warning", "Selber kochen schmeckt genau so gut wie Essen bestellen oder Essen gehen.",
+    #       plotlyOutput("piegeschmack")
+    #   ),
+    #   box(
+    #       title = "Spaß", status = "warning", "Essen gehen macht mehr Spaß als selbst zu kochen.",
+    #       plotlyOutput("piespass")
+    #   )
+    # )
+  )
+  
   hypothesen <- fluidPage(
     fluidRow(
       # box(title = "Wie steht's um den Spaß?", plotOutput("pie1")),
@@ -322,7 +409,9 @@ infotab <- fluidPage(
         icon = icon("chart-bar")
       ),
       menuItem("Hypothesen", tabName = "hypothesen", icon = icon("lightbulb")),
+      menuItem("Eure Umfrage", tabName = "umfrage", icon = icon("poll-h")),
       menuItem("Daten", tabName = "data", icon = icon("table")),
+      menuItem("Exkurs: Normalverteilung", tabName = "normalverteilung", icon = icon("balance-scale-left")),
       # menuItem("Übungen", tabName = "exercises", icon = icon("award")),
       menuItem("Info", tabName = "info", icon = icon("question"))
     )),
@@ -374,9 +463,11 @@ infotab <- fluidPage(
       ),
       
       tabItem(tabName= "hypothesen", hypothesen),
+      tabItem(tabName= "umfrage", umfrage),
       # Second tab content
       tabItem(tabName = "data",
               datentab),
+      tabItem(tabName = "normalverteilung", normalverteilung),
       
       tabItem(
         tabName = "exercises",
@@ -385,12 +476,68 @@ infotab <- fluidPage(
       tabItem("info", infotab)
     )))
   
-  server <- function(input, output) {
+  server <- function(input, output, session) {
+    answers = c('Ja', 'Nein')
     
-    values <- reactiveValues(datatable = read.csv(paste("food_",1,".csv", sep=""), sep = ";"))
+    #######NORMALVERTEILUNG###########
+    df <- read.csv("students_cleaned.csv", sep = ",")
+    df_ude <- read.csv("students_ude.csv", sep=",")
+    df['highlight'] <- 'no'
+    df_ude['highlight'] <- 'no'
+    
+    original <- reactiveValues(df = df[FALSE, ])
+    compare <- reactiveValues(df = df[FALSE, ])
+    values_original <- reactiveValues(datatable = df[FALSE, ])
+    values_comp <- reactiveValues(datatable = df[FALSE, ])
+    updated <-
+      reactiveValues(dataframe = df[FALSE, ], subset = NULL)
+    #################################
+    
+    count_geld = c(328,29)
+    count_zeit = c(194,142)
+    count_gesundheit = c(265,64)
+    count_geschmack = c(215,105)
+    count_spass=c(151,175)
+    df_geld = data.frame(answers,count_geld)
+    df_zeit = data.frame(answers,count_zeit)
+    df_gesundheit = data.frame(answers,count_gesundheit)
+    df_geschmack = data.frame(answers,count_geschmack)
+    df_spass = data.frame(answers,count_spass)
+    
+    values <- reactiveValues(datatable = read.csv(paste("food_",0,".csv", sep=""), sep = ";"))
     
     observeEvent(input$dayslide, {
       values$datatable <- read.csv(paste("food_",input$dayslide,".csv", sep=""), sep = ";")
+    })
+    
+    output$piegeld <- renderPlotly({
+      colors <- c('#a8eeee', '#fde86d')
+      plot_ly(df_geld, labels = answers, values = count_geld, type = 'pie', marker = list(colors = colors,
+                                                                                          line = list(color = '#FFFFFF', width = 1)))
+    })
+    
+    output$piezeit <- renderPlotly({
+      colors <- c('#ab84a3', '#1e4d4c')
+      plot_ly(df_zeit, labels = answers, values = count_zeit, type = 'pie', marker = list(colors = colors,
+                                                                                          line = list(color = '#FFFFFF', width = 1)))
+    })
+    
+    output$piegesundheit <- renderPlotly({
+      colors <- c('#a5991e', '#f2facc')
+      plot_ly(df_gesundheit, labels = answers, values = count_gesundheit, type = 'pie', marker = list(colors = colors,
+                                                                                          line = list(color = '#FFFFFF', width = 1)))
+    })
+    
+    output$piegeschmack <- renderPlotly({
+      colors <- c('#666bc8', '#ac1454')
+      plot_ly(df_geschmack, labels = answers, values = count_geschmack, type = 'pie', marker = list(colors = colors,
+                                                                                          line = list(color = '#FFFFFF', width = 1)))
+    })
+    
+    output$piespass <- renderPlotly({
+      colors <- c('#42933d', '#f79830')
+      plot_ly(df_spass, labels = answers, values = count_spass, type = 'pie', marker = list(colors = colors,
+                                                                                          line = list(color = '#FFFFFF', width = 1)))
     })
     
     output$Essen <-
@@ -619,6 +766,117 @@ infotab <- fluidPage(
         xlab("Kategorie") +
         ylab("Durchschnittliches Fun-Rating") 
     })
+    
+    
+    #########################Normalverteilung#########################
+    observeEvent(input$uni, {
+      if (input$uni == "fu") {
+        original$df <- df
+        values_original$datatable <- original$df
+        updateRadioButtons(session, 'gender', selected="all")
+      }
+      else{
+        original$df <- df_ude
+        values_original$datatable <- original$df
+        updateRadioButtons(session, 'gender',  selected="all")
+      }
+    })
+    
+    observeEvent(input$gender, {
+      updated$subset <- NULL
+      if (input$gender == "all") {
+        values_original$datatable <- original$df
+      }
+      else{
+        values_original$datatable <- filter(original$df, Geschlecht == input$gender)
+      }
+    })
+    
+    observeEvent(input$uni_comp, {
+      if (input$uni_comp == "fu") {
+        compare$df <- df
+        values_comp$datatable <- compare$df
+        updateRadioButtons(session, 'gender_comp', selected="all")
+      }
+      else{
+        compare$df <- df_ude
+        values_comp$datatable <- compare$df
+        updateRadioButtons(session, 'gender_comp',  selected="all")
+      }
+    })
+    
+    observeEvent(input$gender_comp, {
+      if (input$gender_comp == "all") {
+        values_comp$datatable <- compare$df
+      }
+      else{
+        values_comp$datatable <- filter(compare$df, Geschlecht == input$gender_comp)
+      }
+    })
+    
+    observeEvent(input$inputslider, {
+      updated$dataframe <- values_original$datatable[0:input$inputslider, ]
+    })
+    
+    observeEvent(input$add, {
+      if (input$inputslider < nrow(values_original$datatable)-1) {
+        updateSliderInput(session, "inputslider", value = input$inputslider + 5)
+        values_original$datatable['highlight'] = 'no'
+        values_original$datatable[(input$inputslider + 1):(input$inputslider + 5), ]['highlight'] = 'yes'
+        updated$subset <-
+          values_original$datatable[(input$inputslider + 1):(input$inputslider + 5), ]
+      }
+    })
+    
+    observeEvent(input$minus, {
+      if (input$inputslider > 0) {
+        values_original$datatable['highlight'] = 'no'
+        updateSliderInput(session, "inputslider", value = input$inputslider - 5)
+        updated$subset <- NULL
+      }
+    })
+    
+    output$slider <- renderUI({
+      sliderInput(
+        "inputslider",
+        "Füge Datenpunkte hinzu:",
+        min = 0,
+        max = nrow(values_original$datatable),
+        value = 0,
+        step = 10,
+        ticks = TRUE
+      )
+    })
+    
+    output$printslide <- renderText({
+      paste("Momentan:", input$inputslider, sep = " ")
+    })
+    
+    output$main_plot <- renderPlotly({
+      if (dim(updated$dataframe)[1] == 0)
+        return(NULL)
+      gg <-
+        ggplot(updated$dataframe, aes(x = Größe, text = paste0("Größe: ",x, ", Anzahl: ",..count..))) +
+        geom_histogram(data = updated$dataframe, aes(fill = highlight),
+                       alpha = 0.5,
+                       binwidth = 1 ) +
+        geom_density(data = updated$dataframe, aes(y = ..count..), alpha=0.5) +
+        ylab("Anzahl") +
+        xlab("Größe in cm")  + theme(legend.title = element_blank()) + theme(legend.position = "none") + ggtitle("Größenverteilung")
+      
+      if(input$compare == 1){
+        gg <- gg + geom_histogram(data = values_comp$datatable, alpha = 0.5,binwidth = 1, fill = "#69b3a2" ) +
+          geom_density(data = values_comp$datatable, aes(y = ..count..), alpha=1, color = "#69b3a2")
+      }
+      ggplotly(gg, tooltip = "text")
+      
+      
+    })
+    
+    output$dataview <- DT::renderDataTable({
+      datatable(updated$subset[c("Name", "Alter", "Größe")], options = list(paging = FALSE, searching= FALSE),  rownames = FALSE)
+    })
+    ############################################
   }
   
   shinyApp(ui, server)
