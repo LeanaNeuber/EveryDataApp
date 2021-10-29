@@ -7,9 +7,9 @@ library(dplyr)
 library(plotly)
 
 #####################
-day = 1
-show_histo = 0
-show_normaldist = 0
+day = 6
+show_histo = 1
+show_normaldist = 1
 ####################
 
 de <- list(
