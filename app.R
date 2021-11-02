@@ -7,8 +7,8 @@ library(dplyr)
 library(plotly)
 
 #####################
-day = 6
-show_histo = 1
+day = 9
+show_histo = 0
 show_normaldist = 1
 ####################
 
@@ -53,15 +53,16 @@ normalverteilung <- fluidPage(
                           )),
                    column(
                      6,
-                     radioButtons(
-                       'gender',
-                       'Geschlecht',
-                       c(
-                         "Alle" = "all",
-                         "Weiblich" = "Female",
-                         "Männlich" = "Male"
-                       )
-                     )
+                     conditionalPanel(
+                       condition = "input.uni == 'fu'", radioButtons(
+                         'gender',
+                         'Geschlecht',
+                         c(
+                           "Alle" = "all",
+                           "Weiblich" = "Female",
+                           "Männlich" = "Male"
+                         )
+                       ))
                    )),
           column(
             width = 12,
@@ -100,15 +101,16 @@ normalverteilung <- fluidPage(
             ),
             column(
               6,
-              radioButtons(
-                'gender_base',
-                'Geschlecht',
-                c(
-                  "Alle" = "all",
-                  "Weiblich" = "Female",
-                  "Männlich" = "Male"
-                )
-              )
+              conditionalPanel(
+                condition = "input.uni_base == 'fu'", radioButtons(
+                  'gender_base',
+                  'Geschlecht',
+                  c(
+                    "Alle" = "all",
+                    "Weiblich" = "Female",
+                    "Männlich" = "Male"
+                  )
+                ))
             )),
         box(title = "Datenset 2",
             column(
@@ -119,15 +121,16 @@ normalverteilung <- fluidPage(
             ),
             column(
               6,
-              radioButtons(
-                'gender_comp',
-                'Geschlecht',
-                c(
-                  "Alle" = "all",
-                  "Weiblich" = "Female",
-                  "Männlich" = "Male"
-                )
-              )
+              conditionalPanel(
+                condition = "input.uni_comp == 'fu'", radioButtons(
+                  'gender_comp',
+                  'Geschlecht',
+                  c(
+                    "Alle" = "all",
+                    "Weiblich" = "Female",
+                    "Männlich" = "Male"
+                  )
+                ))
             )),
         
       ),
@@ -506,8 +509,8 @@ infotab <- fluidPage(
     answers = c('Ja', 'Nein')
     
     #######NORMALVERTEILUNG###########
-    df <- read.csv("students_cleaned.csv", sep = ",")
-    df_ude <- read.csv("students_ude.csv", sep=",")
+    df <- read.csv("heights_fu.csv", sep = ",")
+    df_ude <- read.csv("heights_ude.csv", sep=",")
     df['highlight'] <- 'no'
     df_ude['highlight'] <- 'no'
     
@@ -815,8 +818,8 @@ infotab <- fluidPage(
     
     
     #########################Normalverteilung#########################
-    df <- read.csv("students_cleaned.csv", sep = ",")
-    df_ude <- read.csv("students_ude.csv", sep = ",")
+    df <- read.csv("heights_fu.csv", sep = ",")
+    df_ude <- read.csv("heights_ude.csv", sep = ",")
     df['highlight'] <- 'no'
     df_ude['highlight'] <- 'no'
     
@@ -997,7 +1000,7 @@ infotab <- fluidPage(
     
     output$dataview <- DT::renderDataTable({
       datatable(
-        updated$subset[c("Name", "Alter", "Größe")],
+        updated$subset[c("ID", "Größe")],
         options = list(paging = FALSE, searching = FALSE),
         rownames = FALSE
       )
