@@ -993,7 +993,7 @@ infotab <- fluidPage(
                      aes(y = ..count..),
                      alpha = 0.7, color='#edae49') +
         ylab("Anzahl") +  
-        xlab("Größe in cm")  + theme(legend.title = element_blank()) + ggtitle("Größenverteilungen") + scale_fill_manual(values=c('#00798c','#edae49')) +theme(legend.title = element_blank())
+        xlab("Größe in cm")  + theme(legend.title = element_blank()) + ggtitle("Größenverteilungen") + scale_fill_manual(values=c('#00798c','#edae49'), name = NULL)
       ggplotly(gg, tooltip = "text")
       
     })
