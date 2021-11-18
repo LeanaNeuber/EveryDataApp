@@ -7,8 +7,8 @@ library(dplyr)
 library(plotly)
 
 #####################
-day = 9
-show_histo = 0
+day = 20
+show_histo = 1
 show_normaldist = 1
 ####################
 
@@ -404,16 +404,6 @@ infotab <- fluidPage(
           "category",
           "Wähle eine Spalte:",
           choices = c("Kategorie", "Kosten", "Zeit", "Geschmack", "Fun")
-        ),
-        conditionalPanel(
-          "input.category == 'Zeit' | input.category == 'Kosten'| input.category == 'Geschmack'| input.category == 'Fun'",
-          sliderInput(
-            inputId = "bins",
-            label = "Anzahl der Balken:",
-            min = 1,
-            max = 30,
-            value = 10
-          )
         )
       ), 
     ),
@@ -689,25 +679,25 @@ infotab <- fluidPage(
     output$plot1 <-  renderPlot({
       if (input$category == "Zeit")  {
         ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
-                                                                                    input$bins,
+                                                                                    30,
                                                                                   fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Zeit in Minuten")+theme(axis.text=element_text(size=12),
                                                                                                                                                                           axis.title=element_text(size=12))
       }
       else if (input$category == "Kosten")  {
         ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
-                                                                                           input$bins,
+                                                                                           30,
                                                                                          fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Kosten in €")+theme(axis.text=element_text(size=12),
                                                                                                                                                                              axis.title=element_text(size=12))
       }
       else if (input$category == "Geschmack")  {
         ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
-                                                                                           input$bins,
+                                                                                           30,
                                                                                          fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Geschmack von 1 bis 10")+theme(axis.text=element_text(size=12),
                                                                                                                                                                                         axis.title=element_text(size=12))
       }
       else if (input$category == "Fun")  {
         ggplot(data = values$datatable, aes_string(x = input$category)) + geom_histogram(bins =
-                                                                                           input$bins,
+                                                                                           30,
                                                                                          fill = "#098474", color="black")+ylab("Anzahl der Essen")+xlab("Fun von 1 bis 10")+theme(axis.text=element_text(size=12),
                                                                                                                                                                                   axis.title=element_text(size=12))
       }
