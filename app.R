@@ -523,10 +523,10 @@ infotab <- fluidPage(
     df_geschmack = data.frame(answers,count_geschmack)
     df_spass = data.frame(answers,count_spass)
     
-    values <- reactiveValues(datatable = read.csv(paste("food_",0,".csv", sep=""), sep = ";"))
+    values <- reactiveValues(datatable = read.csv(paste("food_data/food_",0,".csv", sep=""), sep = ";"))
     
     observeEvent(input$dayslide, {
-      values$datatable <- read.csv(paste("food_",input$dayslide,".csv", sep=""), sep = ";")
+      values$datatable <- read.csv(paste("food_data/food_",input$dayslide,".csv", sep=""), sep = ";")
     })
     
     output$piegeld <- renderPlotly({
@@ -670,7 +670,7 @@ infotab <- fluidPage(
     # Downloadable csv of selected dataset
     output$downloadData <- downloadHandler(
       filename = function() {
-        "food.csv"
+        "food_data/food.csv"
       },
       content = function(file) {
         write.csv(values$datatable, file, row.names = FALSE)
